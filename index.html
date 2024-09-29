@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="QR Code Generator for Text and Image URLs">
+    <meta name="author" content="Your Name">
+    <title>QR Code Generator</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #000; /* Neon black background */
+            color: #fff; /* White text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            border: 2px solid #222;
+            padding: 40px;
+            border-radius: 15px;
+            background: linear-gradient(145deg, #111, #333); /* Black and grey gradient */
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.3); /* Neon green glow effect */
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #0f0; /* Neon green title */
+        }
+
+        input[type="text"], input[type="file"] {
+            width: 300px;
+            height: 40px;
+            margin: 10px 0;
+            padding: 0 15px;
+            font-size: 1.1em;
+            border: 1px solid #666;
+            border-radius: 10px;
+            background-color: #222;
+            color: #fff;
+            box-shadow: inset 0 0 5px #444;
+        }
+
+        button {
+            width: 200px;
+            height: 50px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 25px;
+            background-color: #0f0; /* Neon green button */
+            color: #000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px #0f0, 0 0 30px #0f0, 0 0 50px #0f0; /* Green glow */
+        }
+
+        button:hover {
+            background-color: #00f; /* Neon blue on hover */
+            box-shadow: 0 0 10px #00f, 0 0 30px #00f, 0 0 50px #00f; /* Blue glow on hover */
+        }
+
+        .qr-code {
+            margin-top: 30px;
+        }
+
+        .qr-code img {
+            width: 200px;
+            height: 200px;
+            border: 5px solid #0f0;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #0f0; /* Neon green glow for QR code */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QR Code Generator</h1>
+        <input type="text" id="text" placeholder="Enter text or URL...">
+        <br>
+        <input type="file" id="imageUpload" accept="image/*">
+        <br>
+        <button id="generateBtn">Generate QR Code</button>
+        <div class="qr-code" id="qrCode"></div>
+    </div>
+
+    <script>
+        document.getElementById('generateBtn').addEventListener('click', function() {
+            let text = document.getElementById('text').value;
+            let imageFile = document.getElementById('imageUpload').files[0];
+            let qrCodeContainer = document.getElementById('qrCode');
+
+            // Clear previous QR code
+            qrCodeContainer.innerHTML = '';
+
+            if (text.trim() !== "") {
+                // Generate QR code for text or URL
+                let qrCodeImage = document.createElement('img');
+                qrCodeImage.src = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(text)}&size=200x200`;
+                qrCodeContainer.appendChild(qrCodeImage);
+            } else if (imageFile) {
+                // Use FileReader to read the image and convert it to a URL for QR code
+                let reader = new FileReader();
+                reader.onload = function(event) {
+                    let imageDataURL = event.target.result;
+
+                    // Instead of generating QR code with image data, prompt the user to upload to a cloud and get a link.
+                    alert("Please upload your image to an image hosting service like Imgur or Cloudinary and use the link here.");
+                    
+                    // Simulate QR code generation for image URL (replace 'image-link' with your uploaded image URL)
+                    let qrCodeImage = document.createElement('img');
+                    qrCodeImage.src = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent('image-link')}&size=200x200`;
+                    qrCodeContainer.appendChild(qrCodeImage);
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+                alert("Please enter some text/URL or select an image!");
+            }
+        });
+    </script>
+</body>
+</html>
